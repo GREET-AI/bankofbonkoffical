@@ -146,13 +146,13 @@ export default function Timer() {
           <div className="relative z-10 flex-1 flex flex-col">
             <h3 className="text-2xl font-bold mb-6 text-[#FFA319] mt-8 font-sophie">Introducing the Dev</h3>
             <div className="mb-2 flex items-center gap-2">
-              <span className="font-mono text-base text-[#14F195] font-sophie">@MrMoonZyno</span>
+              <span className="font-mono text-base text-[#14F195] font-sophie">@ValentinoCrypt</span>
             </div>
-            <div className="font-bold text-white mb-2 font-sophie">CHARS | Crypto Trader | No shills | Coder</div>
-            <div className="text-white/80 mb-auto text-base font-sophie">💻 Code gremlin | 🧠 Overthinking in TypeScript | 🛰️ Building dumb stuff that might accidentally go viral | Opinions = mine, bugs = features</div>
+            <div className="font-bold text-white mb-2 font-sophie">DeFi Developer | Crypto Enthusiast | Bonk Bank Creator</div>
+            <div className="text-white/80 mb-auto text-base font-sophie">💻 Full-Stack Developer | 🧠 Next.js & TypeScript Expert | 🛰️ Building revolutionary DeFi platforms | Building the future of decentralized banking</div>
             <div className="flex justify-end mt-4">
               <a 
-                href="https://x.com/MrMoonZyno"
+                href="https://x.com/ValentinoCrypt"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="bg-[#FFA319] hover:bg-[#FFD600] text-[#1A0F00] font-bold px-6 py-2 rounded-lg text-base transition-all flex items-center group border-2 border-[#1A0F00] hover:border-[#14F195] shadow-lg relative overflow-hidden font-sophie"
