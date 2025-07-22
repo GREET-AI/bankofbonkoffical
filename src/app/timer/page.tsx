@@ -176,7 +176,7 @@ export default function Timer() {
             <p className="text-[#FFD600] text-base font-semibold mb-auto animate-pulse font-sophie">The more you share, the higher your chances!<br/>Let&apos;s make Bonk Bank go viral!</p>
             <div className="flex justify-end mt-6">
               <a 
-                href={`https://x.com/intent/tweet?text=${encodeURIComponent('🔥 Check out Bonk Bank – earn BONK every 30 minutes just for holding! Powered by @pumpdotfun & @BonkBank. Join the degen revolution: https://bonkbank.io #Bonk #Crypto #Airdrop')}`}
+                href={`https://x.com/intent/tweet?text=${encodeURIComponent('🔥 Check out Bonk Bank – earn BONK every 30 minutes just for holding! Powered by @bonk_fun & @BonkBank. Join the degen revolution: https://bonkbank.io #Bonk #Crypto #Airdrop')}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="bg-[#FFA319] hover:bg-[#FFD600] text-[#1A0F00] font-extrabold px-8 py-4 rounded-lg text-xl transition-all flex items-center group border-2 border-[#1A0F00] hover:border-[#14F195] shadow-2xl relative overflow-hidden font-sophie animate-bounce"
