@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
-import { TIMER_MINT } from '@/constants/timer';
+import { TIMER_MINT, BONKBANK_CA } from '@/constants/timer';
 
 export interface Holder {
   address: string;
@@ -37,7 +37,7 @@ const TIER_ICONS: Record<string, string> = {
   Shrimp: '/shrimp.svg',
 };
 
-export default function WalletAnalyzer({ address, rewardInfo, tokenName = "TIMER" }: WalletAnalyzerProps) {
+export default function WalletAnalyzer({ address, rewardInfo, tokenName = "BONKBANK" }: WalletAnalyzerProps) {
     const [tokens, setTokens] = useState<TokenInfo[]>([]);
     const [loading, setLoading] = useState(false);
     const [showToast, setShowToast] = useState(false);
@@ -47,6 +47,9 @@ export default function WalletAnalyzer({ address, rewardInfo, tokenName = "TIMER
     const rewardPerCycle = rewardInfo && Number(rewardInfo.reward) > 0 ? Number(rewardInfo.reward) : 0;
     const rewardPerSecond = rewardPerCycle / 1800;
     const [simLiveReward, setSimLiveReward] = useState(0);
+
+    // Get the correct token mint based on environment
+  
 
     useEffect(() => {
         if (!address) return;
@@ -77,7 +80,7 @@ export default function WalletAnalyzer({ address, rewardInfo, tokenName = "TIMER
             setTimeout(() => setShowToast(false), 1200);
         }, popupInterval * 1000);
         return () => clearInterval(interval);
-    }, [rewardPerCycle]);
+    }, [rewardPerCycle, rewardPerSecond]);
 
     if (loading) {
         return (
@@ -101,10 +104,10 @@ export default function WalletAnalyzer({ address, rewardInfo, tokenName = "TIMER
                 )}
                 {/* Card Content */}
                 <div className="relative z-10 bg-gradient-to-br from-black/80 to-black/60 backdrop-blur-sm rounded-lg p-6 border border-yellow-400/30">
-                    {/* TIMER Balance ganz oben, groß, Glow */}
+                    {/* BONKBANK Balance ganz oben, groß, Glow */}
                     <div className="flex flex-col items-center mb-6">
                         <div className="text-4xl md:text-5xl font-extrabold text-yellow-300 drop-shadow-[0_0_16px_rgba(255,255,0,0.7)] animate-pulse-glow">
-                            {tokens.find(t => t.mint === TIMER_MINT)?.amount?.toLocaleString() || '0'}
+                            {tokens.find(t => t.mint === TIMER_MINT || t.mint === BONKBANK_CA)?.amount?.toLocaleString() || '0'}
                         </div>
                         <div className="uppercase text-yellow-400 font-bold tracking-widest text-sm mt-1 mb-2">{tokenName}</div>
                     </div>
@@ -113,15 +116,15 @@ export default function WalletAnalyzer({ address, rewardInfo, tokenName = "TIMER
                             <div className="relative">
                                 <div className="absolute inset-0 bg-gradient-to-r from-yellow-400 to-yellow-300 rounded-full blur-md opacity-50 animate-pulse" />
                                 <Image
-                                    src="/clock.gif"
-                                    alt="Timer"
+                                    src="/bonkbank.png"
+                                    alt="Bonk Bank"
                                     width={48}
                                     height={48}
                                     className="relative rounded-full"
                                 />
                             </div>
                             <div>
-                                <h3 className="font-bold text-yellow-400">Solana {tokenName}</h3>
+                                <h3 className="font-bold text-yellow-400">Bonk Bank {tokenName}</h3>
                                 <p className="text-sm text-yellow-300/70">{tokenName}</p>
                             </div>
                         </div>

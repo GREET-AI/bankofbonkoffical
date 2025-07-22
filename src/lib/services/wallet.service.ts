@@ -305,50 +305,65 @@ class WalletService {
       a.timestamp.getTime() - b.timestamp.getTime()
     );
 
-    // NEU: Haltezeit ab dem letzten Zeitpunkt, an dem der Bestand auf > 0 gestiegen ist
-    let balance = 0;
-    let lastAboveZero: Date | null = null;
+    // VEREINFACHTE LOGIK: Haltezeit ab dem letzten Buy
+    let currentBalance = 0;
+    let lastBuyTime: Date | null = null;
+    
     for (const trade of sortedTrades) {
       if (trade.type === 'buy') {
-        balance += trade.amount;
-        if (balance > 0) {
-          lastAboveZero = trade.timestamp;
-        }
+        currentBalance += trade.amount;
+        lastBuyTime = trade.timestamp;
       } else if (trade.type === 'sell') {
-        balance -= trade.amount;
-        if (balance <= 0) {
-          lastAboveZero = null;
+        currentBalance -= trade.amount;
+        // Wenn Balance nach Sell <= 0, dann reset lastBuyTime
+        if (currentBalance <= 0) {
+          lastBuyTime = null;
+          currentBalance = 0;
         }
       }
     }
+
+    // Berechne aktuelle Haltezeit
     let currentHoldingTime = 0;
-    if (balance > 0 && lastAboveZero) {
-      currentHoldingTime = new Date().getTime() - lastAboveZero.getTime();
+    if (currentBalance > 0 && lastBuyTime) {
+      currentHoldingTime = new Date().getTime() - lastBuyTime.getTime();
     }
 
-    // Calculate holding periods (für averageHoldingTime und Score wie gehabt)
+    // Für Demo-Zwecke: Wenn keine echten Trades, simuliere eine Haltezeit
+    if (trades.length === 0 && currentBalance > 0) {
+      // Simuliere 24h Haltezeit für Demo
+      currentHoldingTime = 24 * 60 * 60 * 1000; // 24 Stunden in Millisekunden
+    }
+
+    // Calculate average holding time (vereinfacht)
+    const buyTrades = trades.filter(t => t.type === 'buy');
+    const sellTrades = trades.filter(t => t.type === 'sell');
+    
     let totalHoldingTime = 0;
     let holdingPeriods = 0;
-    for (let i = 0; i < sortedTrades.length - 1; i++) {
-      if (sortedTrades[i].type === 'buy') {
-        const holdingTime = sortedTrades[i + 1].timestamp.getTime() - 
-                          sortedTrades[i].timestamp.getTime();
+
+    // Berechne durchschnittliche Haltezeit zwischen Buy und Sell
+    for (let i = 0; i < buyTrades.length; i++) {
+      const buyTrade = buyTrades[i];
+      const nextSell = sellTrades.find(s => s.timestamp > buyTrade.timestamp);
+      
+      if (nextSell) {
+        const holdingTime = nextSell.timestamp.getTime() - buyTrade.timestamp.getTime();
         totalHoldingTime += holdingTime;
+        holdingPeriods++;
+      } else {
+        // Noch nicht verkauft - verwende aktuelle Haltezeit
+        totalHoldingTime += currentHoldingTime;
         holdingPeriods++;
       }
     }
-    // If still holding from last buy
-    if (sortedTrades[sortedTrades.length - 1].type === 'buy') {
-      totalHoldingTime += currentHoldingTime;
-      holdingPeriods++;
-    }
 
     const averageHoldingTime = holdingPeriods > 0 ? 
-      totalHoldingTime / holdingPeriods : 0;
+      totalHoldingTime / holdingPeriods : currentHoldingTime;
 
     // Calculate holding score (0-100)
-    const buyCount = trades.filter(t => t.type === 'buy').length;
-    const sellCount = trades.filter(t => t.type === 'sell').length;
+    const buyCount = buyTrades.length;
+    const sellCount = sellTrades.length;
     const tradeRatio = buyCount > 0 ? sellCount / buyCount : 1;
     
     const holdingScore = Math.min(100, Math.max(0,

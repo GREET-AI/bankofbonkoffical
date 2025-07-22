@@ -9,6 +9,14 @@
   font-display: swap;
 }
 
+@font-face {
+  font-family: 'Mabook';
+  src: url('/Mabook.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
 @custom-variant dark (&:is(.dark *));
 
 /* Moon Theme Colors */
@@ -18,13 +26,19 @@
   --moon-gradient-start: #D6FF00;
   --moon-gradient-end: #B6FF00;
   --font-sophie: 'SophieComic', system-ui, sans-serif;
-  --background: #000000;
+  --font-mabook: 'Mabook', system-ui, sans-serif;
+  --background: #1A0F00;
 }
 
 /* Global Typography */
 h1, h2, h3, h4, h5, h6,
 .font-sophie {
   font-family: var(--font-sophie);
+  font-weight: normal;
+}
+
+.font-mabook {
+  font-family: var(--font-mabook);
   font-weight: normal;
 }
 
@@ -159,6 +173,44 @@ button,
   }
 }
 
+@keyframes float-chart {
+  0% {
+    opacity: 0;
+    transform: translateY(20px) scale(0.8) rotate(0deg);
+  }
+  20% {
+    opacity: 0.4;
+    transform: translateY(0) scale(1) rotate(5deg);
+  }
+  80% {
+    opacity: 0.4;
+    transform: translateY(-20px) scale(1) rotate(-5deg);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-40px) scale(0.8) rotate(0deg);
+  }
+}
+
+@keyframes float-money {
+  0% {
+    opacity: 0;
+    transform: translateY(30px) scale(0.6) rotate(0deg);
+  }
+  25% {
+    opacity: 0.6;
+    transform: translateY(0) scale(1.2) rotate(10deg);
+  }
+  75% {
+    opacity: 0.6;
+    transform: translateY(-30px) scale(1) rotate(-10deg);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-60px) scale(0.6) rotate(0deg);
+  }
+}
+
 .animate-gradient {
   animation: gradient 15s ease infinite;
   background-size: 200% 200%;
@@ -183,6 +235,14 @@ button,
 
 .animate-float-logo {
   animation: float-logo 4s ease-in-out forwards;
+}
+
+.animate-float-chart {
+  animation: float-chart 5s ease-in-out forwards;
+}
+
+.animate-float-money {
+  animation: float-money 6s ease-in-out forwards;
 }
 
 @theme inline {
@@ -300,7 +360,7 @@ button,
   body {
     @apply bg-background text-foreground;
     font-family: var(--font-sophie);
-    background-color: #000000;
+    background-color: #1A0F00;
     min-height: 100%;
     color: white;
   }

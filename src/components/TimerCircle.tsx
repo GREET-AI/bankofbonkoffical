@@ -96,8 +96,8 @@ export function TimerCircle() {
           {/* Center GIF */}
           <div className="relative w-32 h-32">
             <Image
-              src="/clock.gif"
-              alt="Timer Animation"
+              src="/bonkbank.png"
+              alt="Bonk Bank Animation"
               fill
               className="rounded-full object-cover"
             />
