@@ -101,7 +101,8 @@ function getTimeMult(minutesHeld: number) {
 
 class WalletService {
   private connection: Connection;
-  private TIMER_TOKEN_MINT = process.env.NEXT_PUBLIC_TIMER_MINT || "3T721bpRc5FNY84W36vWffxoKs4FLXhBpSaqwUCRpump";
+  // ⚠️  WICHTIG: Timer Token existieren noch NICHT! PLACEHOLDER bis zum Launch!
+  private TIMER_TOKEN_MINT = process.env.NEXT_PUBLIC_TIMER_MINT || "TIMER_TOKEN_PLACEHOLDER_UNTIL_LAUNCH";
   private HELIUS_API_KEY = process.env.HELIUS_PUBLIC_API_KEY || "";
   private HELIUS_ENDPOINT = `https://api.helius.xyz/v0`;
   
