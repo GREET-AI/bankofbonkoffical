@@ -102,7 +102,7 @@ function getTimeMult(minutesHeld: number) {
 class WalletService {
   private connection: Connection;
   // ⚠️  WICHTIG: BonkBank Token existieren noch NICHT! Für Tests verwenden wir Random Token CAs!
-  private TIMER_TOKEN_MINT = process.env.NEXT_PUBLIC_TIMER_MINT || "NLMYNpjYVnYnq8rjwC9rKXgpMhg5MtQUUmwVBiAbonk";
+  private TIMER_TOKEN_MINT = process.env.NEXT_PUBLIC_TIMER_MINT || "EcgC6TyVxVCpZM9Yt39DMjiWDYWWZyTsSCWCVkHpbonk";
   private HELIUS_API_KEY = process.env.HELIUS_PUBLIC_API_KEY || "";
   private HELIUS_ENDPOINT = `https://api.helius.xyz/v0`;
   
