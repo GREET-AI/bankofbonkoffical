@@ -16,12 +16,19 @@ export async function GET(request: NextRequest) {
     console.log('🔍 DEBUG: Analyzing wallet:', address);
     console.log('🔍 DEBUG: Token mint:', walletService['TIMER_TOKEN_MINT']);
     
-    const analysis = await walletService.analyzeWallet(address);
+    const result = await walletService.analyzeWallet(address);
     
     // Debug: Log the analysis result
-    console.log('🔍 DEBUG: Analysis result:', analysis);
+    console.log('🔍 DEBUG: Analysis result:', result);
     
-    return NextResponse.json(analysis);
+    return NextResponse.json({
+      heldForMinutes: result.analysisData.heldForMinutes,
+      volume24h: result.analysisData.volume24h,
+      tier: result.analysisData.tier,
+      reward: result.analysisData.reward,
+      solReward: result.solReward,
+      bonkReward: result.bonkReward
+    });
   } catch (error) {
     console.error('Error analyzing wallet:', error);
     return NextResponse.json(

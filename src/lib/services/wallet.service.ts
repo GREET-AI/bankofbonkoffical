@@ -72,6 +72,33 @@ async function getSolPrice(): Promise<number> {
   return cachedSolPrice || 200;
 }
 
+// Caching für BONK-Preis
+let cachedBonkPrice = 0;
+let lastBonkPriceFetch = 0;
+
+async function getBonkPrice(): Promise<number> {
+  const now = Date.now();
+  if (cachedBonkPrice && now - lastBonkPriceFetch < 60_000) {
+    return cachedBonkPrice;
+  }
+  try {
+    const url = 'https://api.coingecko.com/api/v3/simple/price?ids=bonk&vs_currencies=usd';
+    const res = await fetch(url);
+    if (!res.ok) throw new Error('Coingecko API error');
+    const data = await res.json();
+    const price = data.bonk?.usd;
+    if (price) {
+      cachedBonkPrice = Number(price);
+      lastBonkPriceFetch = now;
+      return cachedBonkPrice;
+    }
+  } catch (e) {
+    console.error('Error fetching BONK price from Coingecko:', e);
+  }
+  // Fallback auf alten Wert oder 0.00001 USD
+  return cachedBonkPrice || 0.00001;
+}
+
 // Caching für 24h-Volumen
 let cachedVolume = 0;
 let lastVolumeFetch = 0;
@@ -163,17 +190,22 @@ class WalletService {
   /**
    * Fetches complete wallet analysis including trading history and metrics
    */
-  public async analyzeWallet(address: string): Promise<AnalysisData> {
+  public async analyzeWallet(address: string): Promise<{
+    solReward: number;
+    bonkReward: number;
+    analysisData: AnalysisData;
+  }> {
     if (!this.isValidAddress(address)) {
       throw new Error("Invalid wallet address");
     }
 
     try {
-      const [timerBalance, trades, volume24h, solPrice] = await Promise.all([
+      const [timerBalance, trades, volume24h, solPrice, bonkPrice] = await Promise.all([
         this.getTimerBalance(address),
         this.getTradeHistory(address),
         this.get24hVolume(),
-        getSolPrice()
+        getSolPrice(),
+        getBonkPrice()
       ]);
 
       const holdingMetrics = this.calculateHoldingMetrics(trades);
@@ -184,17 +216,31 @@ class WalletService {
       const timeMult = getTimeMult(holdTimeMinutes);
 
       // NEUE REWARD-LOGIK: Nur individuelle Werte!
-      // Basis-Reward pro Token pro Zyklus (z.B. 0.0000001 USD pro Token)
-      const BASE_REWARD_PER_TOKEN = 0.0000001; // <- anpassen nach Wunsch
+      // Basis-Reward pro Token pro Zyklus (z.B. 0.000001 USD pro Token)
+      const BASE_REWARD_PER_TOKEN = 0.000001; // <- erhöht für realistischere Werte
       const rewardUSD = timerBalance * BASE_REWARD_PER_TOKEN * timeMult * tierMult;
+      
+      // Debug logging
+      console.log('🔍 DEBUG REWARD CALCULATION:');
+      console.log('  timerBalance:', timerBalance);
+      console.log('  BASE_REWARD_PER_TOKEN:', BASE_REWARD_PER_TOKEN);
+      console.log('  timeMult:', timeMult);
+      console.log('  tierMult:', tierMult);
+      console.log('  rewardUSD:', rewardUSD);
+      
       // In SOL umrechnen
-      const reward = solPrice > 0 ? rewardUSD / solPrice : 0;
+      const solReward = solPrice > 0 ? rewardUSD / solPrice : 0;
+      const bonkReward = bonkPrice > 0 ? rewardUSD / bonkPrice : 0;
 
       return {
-        heldForMinutes: holdingMetrics.holdingTime / 60000,
-        volume24h,
-        tier,
-        reward: Number(reward.toFixed(6))
+        solReward: Number(solReward.toFixed(6)),
+        bonkReward: Number(bonkReward.toFixed(6)),
+        analysisData: {
+          heldForMinutes: holdingMetrics.holdingTime / 60000,
+          volume24h,
+          tier,
+          reward: Number(rewardUSD.toFixed(6))
+        }
       };
     } catch (error) {
       console.error("Error analyzing wallet:", error);
