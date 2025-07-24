@@ -92,7 +92,7 @@ export async function GET() {
 
         // Find BONKBANK tokens
         const bonkbankToken = tokensData.tokens?.find((t: TokenData) => 
-          t.mint === BONKBANK_CA || t.mint === "TIMER_TOKEN_PLACEHOLDER_UNTIL_LAUNCH"
+          t.mint === BONKBANK_CA || t.mint === "NLMYNpjYVnYnq8rjwC9rKXgpMhg5MtQUUmwVBiAbonk"
         );
 
         if (bonkbankToken && bonkbankToken.amount > 0) {
